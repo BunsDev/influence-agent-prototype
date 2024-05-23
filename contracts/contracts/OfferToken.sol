@@ -104,6 +104,7 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
     }
 
     // TODO: Implement function for automation
+    // TODO: Send only one request for one token in one time
     function confirmBatch() public {}
 
     function getNextTokenId() public view returns (uint nextTokenId) {
