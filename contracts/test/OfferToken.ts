@@ -14,7 +14,8 @@ describe("OfferToken", function () {
     );
     const offerTokenContract = await offerTokenContractFactory.deploy(
       ethers.ZeroHash,
-      ethers.ZeroAddress
+      ethers.ZeroAddress,
+      0
     );
     // Send usd tokens to users
     await usdTokenContract
@@ -63,7 +64,7 @@ describe("OfferToken", function () {
     ).to.be.not.reverted;
     // Confirm offer
     await expect(
-      offerTokenContract.connect(userTwo).confirm(tokenId)
+      offerTokenContract.connect(userTwo).close(tokenId)
     ).to.changeTokenBalances(
       usdTokenContract,
       [userTwo, offerTokenContract],

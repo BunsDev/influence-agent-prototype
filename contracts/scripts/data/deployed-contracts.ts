@@ -2,10 +2,17 @@ export const CONTRACTS: {
   [key: string]: {
     offerToken: `0x${string}` | undefined;
     usdToken: `0x${string}` | undefined;
+    functionsDonId: `0x${string}` | undefined;
+    functionsRouter: `0x${string}` | undefined;
+    functionsSubscriptionId: number | undefined;
   };
 } = {
   avalancheFuji: {
-    offerToken: "0x02008a8DBc938bd7930bf370617065B6B0c1221a",
+    offerToken: "0x1b21550F42E993d1b692d18D79bCd783638633F2",
     usdToken: "0x96E6AF6E9e400d0Cd6a4045F122df22BCaAAca59",
+    functionsDonId:
+      "0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000",
+    functionsRouter: "0xA9d587a00A31A52Ed70D6026794a8FC5E2F5dCb0",
+    functionsSubscriptionId: 8661,
   },
 };
