@@ -73,7 +73,6 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
         _contents[tokenId] = content;
     }
 
-    // TODO: Check deadline
     function accept(uint tokenId) public {
         // Checks
         require(_contents[tokenId].recipient == msg.sender, "Not recipient");
@@ -91,7 +90,6 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
         _contents[tokenId].acceptDate = block.timestamp;
     }
 
-    // TODO: Check deadline
     function complete(uint tokenId, string memory completeDataURI) public {
         // Checks
         require(_contents[tokenId].recipient == msg.sender, "Not recipient");
