@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { addressToShortAddress } from "@/lib/converters";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { zeroAddress } from "viem";
 
 export function ProfilePersonalCard(props: { chain: number }) {
   const { contracts } = useSiteConfigContracts(props.chain);
@@ -18,7 +19,7 @@ export function ProfilePersonalCard(props: { chain: number }) {
     address: contracts.profileToken,
     abi: profileTokenAbi,
     functionName: "getTokenId",
-    args: [address as `0x${string}`],
+    args: [address || zeroAddress],
     chainId: contracts.chain.id,
   });
 
