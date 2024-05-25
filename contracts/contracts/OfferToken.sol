@@ -4,13 +4,14 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/v1_0_0/FunctionsClient.sol";
 import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/v1_0_0/libraries/FunctionsRequest.sol";
 
 /**
  * @notice A contract that stores offer tokens.
  */
-contract OfferToken is ERC721URIStorage, FunctionsClient {
+contract OfferToken is ERC721URIStorage, Ownable, FunctionsClient {
     using FunctionsRequest for FunctionsRequest.Request;
 
     struct Content {
@@ -52,7 +53,21 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
         bytes32 functionsDonId,
         address functionsRouter,
         uint64 functionsSubscriptionId
-    ) ERC721("Offer Token", "OFRT") FunctionsClient(functionsRouter) {
+    )
+        ERC721("Offer Token", "OFRT")
+        Ownable(msg.sender)
+        FunctionsClient(functionsRouter)
+    {
+        _functionsDonId = functionsDonId;
+        _functionsRouter = functionsRouter;
+        _functionsSubscriptionId = functionsSubscriptionId;
+    }
+
+    function updateFunctionsConfig(
+        bytes32 functionsDonId,
+        address functionsRouter,
+        uint64 functionsSubscriptionId
+    ) public onlyOwner {
         _functionsDonId = functionsDonId;
         _functionsRouter = functionsRouter;
         _functionsSubscriptionId = functionsSubscriptionId;
@@ -148,6 +163,18 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
         address recipient
     ) public view returns (uint successes, uint fails) {
         return (_recipientSuccesses[recipient], _recipientFails[recipient]);
+    }
+
+    function getFunctionsConfig()
+        public
+        view
+        returns (
+            bytes32 functionsDonId,
+            address functionsRouter,
+            uint64 functionsSubscriptionId
+        )
+    {
+        return (_functionsDonId, _functionsRouter, _functionsSubscriptionId);
     }
 
     function _sendRequest(uint tokenId) private {
