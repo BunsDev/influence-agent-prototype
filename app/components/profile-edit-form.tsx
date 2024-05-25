@@ -157,7 +157,7 @@ function EditForm(props: {
               <FormLabel>Image</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="ipfs://..."
+                  placeholder="https://..."
                   disabled={isFormSubmitting}
                   {...field}
                 />
