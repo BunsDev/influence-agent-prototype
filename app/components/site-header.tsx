@@ -49,7 +49,7 @@ export function SiteHeader() {
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel>{chain.name}</DropdownMenuLabel>
                   <Link
-                    href={`/${chain.id}/explore`}
+                    href={`/${chain.id}/profiles`}
                     className="hidden md:block text-sm font-medium text-muted-foreground"
                   >
                     <DropdownMenuItem>Explore</DropdownMenuItem>
