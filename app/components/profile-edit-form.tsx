@@ -34,6 +34,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/use-toast";
 
+// TODO: Add input for profile tags
 export function ProfileEditForm(props: { chain: number }) {
   const { contracts } = useSiteConfigContracts(props.chain);
   const { address } = useAccount();

@@ -23,8 +23,6 @@ export function ProfilePersonalCard(props: { chain: number }) {
     chainId: contracts.chain.id,
   });
 
-  console.log({ profile });
-
   if (!address) {
     return null;
   }
@@ -60,7 +58,7 @@ export function ProfilePersonalCard(props: { chain: number }) {
           </a>
         </p>
         <Link href={`/${props.chain}/profiles/edit`}>
-          <Button>Edit Profile</Button>
+          <Button variant="secondary">Edit Profile</Button>
         </Link>
       </div>
     </div>

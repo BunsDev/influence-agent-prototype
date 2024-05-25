@@ -29,7 +29,7 @@ export default function EntityList(props: {
         </div>
       )}
       {/* Loading list */}
-      {!props.entities && <Skeleton className="w-full h-4" />}
+      {!props.entities && <Skeleton className="w-full h-8" />}
     </div>
   );
 }
