@@ -72,6 +72,7 @@ export function ProfileCard(props: {
             {profileUriData.bio}
           </p>
         )}
+        {/* TODO: Display stats */}
         <div className="flex flex-row gap-4">
           <p className="text-sm">
             <a
