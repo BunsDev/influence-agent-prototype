@@ -32,6 +32,8 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
     address private _functionsRouter;
     uint64 private _functionsSubscriptionId;
 
+    // TODO: Add mapping for statistics
+
     string _functionsSource =
         "const tokenUri = args[0];"
         "const tokenCompleteDataUri = args[1];"
