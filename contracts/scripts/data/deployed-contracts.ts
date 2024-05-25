@@ -9,7 +9,7 @@ export const CONTRACTS: {
   };
 } = {
   avalancheFuji: {
-    offerToken: "0x1b21550F42E993d1b692d18D79bCd783638633F2",
+    offerToken: "0x4518BA8A80a1555402A4c75D631c36338b5b58c4",
     usdToken: "0x96E6AF6E9e400d0Cd6a4045F122df22BCaAAca59",
     profileToken: "0x9a1C3C845BAd2585210913914Bf88242460062E9",
     functionsDonId:
