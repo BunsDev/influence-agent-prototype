@@ -1,7 +1,7 @@
 import { ChainBadge } from "@/components/chain-badge";
+import { ProfileEditForm } from "@/components/profile-edit-form";
 import { Separator } from "@/components/ui/separator";
 
-// TODO: Implement
 export default function EditProfilePage({
   params,
 }: {
@@ -19,6 +19,7 @@ export default function EditProfilePage({
         </p>
       </div>
       <Separator className="my-6" />
+      <ProfileEditForm chain={params.chain} />
     </div>
   );
 }
