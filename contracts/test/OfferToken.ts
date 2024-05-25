@@ -70,5 +70,9 @@ describe("OfferToken", function () {
       [userTwo, offerTokenContract],
       [ethers.parseEther("42"), ethers.parseEther("-42")]
     );
+    // Check stats
+    const userTwoStats = await offerTokenContract.getStats(userTwo);
+    expect(userTwoStats.successes).to.be.equal("1");
+    expect(userTwoStats.fails).to.be.equal("0");
   });
 });

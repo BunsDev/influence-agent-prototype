@@ -31,8 +31,8 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
     bytes32 private _functionsDonId;
     address private _functionsRouter;
     uint64 private _functionsSubscriptionId;
-
-    // TODO: Add mapping for statistics
+    mapping(address recipient => uint successes) _recipientSuccesses;
+    mapping(address recipient => uint fails) _recipientFails;
 
     string _functionsSource =
         "const tokenUri = args[0];"
@@ -122,6 +122,7 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
                 ),
                 "Failed to transfer payment to recipient"
             );
+            _recipientSuccesses[_contents[tokenId].recipient]++;
         }
         // Close using functions
         else {
@@ -141,6 +142,12 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
         uint tokenId
     ) public view returns (Content memory content) {
         return _contents[tokenId];
+    }
+
+    function getStats(
+        address recipient
+    ) public view returns (uint successes, uint fails) {
+        return (_recipientSuccesses[recipient], _recipientFails[recipient]);
     }
 
     function _sendRequest(uint tokenId) private {
@@ -189,6 +196,7 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
                 ),
                 "Failed to transfer payment to recipient"
             );
+            _recipientSuccesses[_contents[tokenId].recipient]++;
         }
         // Send tokens to owner
         if (
@@ -202,6 +210,7 @@ contract OfferToken is ERC721URIStorage, FunctionsClient {
                 ),
                 "Failed to transfer payment to owner"
             );
+            _recipientFails[_contents[tokenId].recipient]++;
         }
     }
 }
