@@ -1,14 +1,15 @@
 import { SiteConfigContracts } from "@/config/site";
-import { addressToShortAddress } from "@/lib/converters";
-import { Button } from "./ui/button";
 import { profileTokenAbi } from "@/contracts/abi/profile-token";
+import useMetadataLoader from "@/hooks/useMetadataLoader";
+import { addressToShortAddress } from "@/lib/converters";
+import { ProfileTokenUriData } from "@/types/profile-token-uri-data";
+import Link from "next/link";
 import { isAddressEqual, zeroAddress } from "viem";
 import { useAccount, useReadContract } from "wagmi";
-import { Skeleton } from "./ui/skeleton";
-import useMetadataLoader from "@/hooks/useMetadataLoader";
-import { ProfileTokenUriData } from "@/types/profile-token-uri-data copy";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 export function ProfileCard(props: {
   profile: string;
@@ -61,12 +62,16 @@ export function ProfileCard(props: {
         {profileUriData.name && (
           <p className="text-xl font-bold">{profileUriData.name}</p>
         )}
+        {profileUriData.tag && (
+          <Badge variant="secondary" className="py-1.5 px-3">
+            {profileUriData.tag}
+          </Badge>
+        )}
         {profileUriData.bio && (
           <p className="text-sm text-muted-foreground mt-1">
             {profileUriData.bio}
           </p>
         )}
-        {/* TODO: Display profile tags */}
         <div className="flex flex-row gap-4">
           <p className="text-sm">
             <a

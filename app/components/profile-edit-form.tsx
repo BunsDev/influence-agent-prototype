@@ -6,7 +6,7 @@ import useError from "@/hooks/useError";
 import useMetadataLoader from "@/hooks/useMetadataLoader";
 import useSiteConfigContracts from "@/hooks/useSiteConfigContracts";
 import { uploadJsonToIpfs } from "@/lib/ipfs";
-import { ProfileTokenUriData } from "@/types/profile-token-uri-data copy";
+import { ProfileTokenUriData } from "@/types/profile-token-uri-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -33,8 +33,14 @@ import { Input } from "./ui/input";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
-// TODO: Add input for profile tags
 export function ProfileEditForm(props: { chain: number }) {
   const { contracts } = useSiteConfigContracts(props.chain);
   const { address } = useAccount();
@@ -75,6 +81,7 @@ function EditForm(props: {
     image: z.string(),
     name: z.string(),
     bio: z.string(),
+    tag: z.string(),
     telegram: z.string(),
   });
 
@@ -84,6 +91,7 @@ function EditForm(props: {
       image: props.profileUriData?.image || "",
       name: props.profileUriData?.name || "",
       bio: props.profileUriData?.bio || "",
+      tag: props.profileUriData?.tag || undefined,
       telegram: props.profileUriData?.telegram || "",
     },
   });
@@ -110,6 +118,7 @@ function EditForm(props: {
         image: values.image,
         name: values.name,
         bio: values.bio,
+        tag: values.tag,
         telegram: values.telegram,
       };
       const profileUri = await uploadJsonToIpfs(profileUriData);
@@ -187,6 +196,36 @@ function EditForm(props: {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="tag"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tag</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={isFormSubmitting}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a tag" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="✈️ Travel">✈️ Travel</SelectItem>
+                  <SelectItem value="🍝 Food">🍝 Food</SelectItem>
+                  <SelectItem value="⚽ Sport">⚽ Sport</SelectItem>
+                  <SelectItem value="📱 Technologies">
+                    📱 Technologies
+                  </SelectItem>
+                  <SelectItem value="🚗 Cars">🚗 Cars</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
