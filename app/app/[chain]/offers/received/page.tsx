@@ -1,4 +1,5 @@
 import { ChainBadge } from "@/components/chain-badge";
+import { OfferReceivedList } from "@/components/offer-received-list";
 import { Separator } from "@/components/ui/separator";
 
 export default function ReceivedOffersPage({
@@ -18,7 +19,7 @@ export default function ReceivedOffersPage({
         </p>
       </div>
       <Separator className="my-6" />
-      {/* TODO: Implement */}
+      <OfferReceivedList chain={params.chain} />
     </div>
   );
 }

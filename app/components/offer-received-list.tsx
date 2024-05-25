@@ -1,29 +1,29 @@
 "use client";
 
+import { offerTokenAbi } from "@/contracts/abi/offer-token";
 import useSiteConfigContracts from "@/hooks/useSiteConfigContracts";
 import { useEffect, useState } from "react";
-import EntityList from "./entity-list";
-import { ProfileCard } from "./profile-card";
+import { isAddressEqual } from "viem";
 import { useAccount, useInfiniteReadContracts } from "wagmi";
-import { profileTokenAbi } from "@/contracts/abi/profile-token";
-import { isAddressEqual, zeroAddress } from "viem";
+import EntityList from "./entity-list";
+import { OfferCard } from "./offer-card";
 
 const LIMIT = 42;
 
-export function ProfileList(props: { chain: number }) {
+export function OfferReceivedList(props: { chain: number }) {
   const { contracts } = useSiteConfigContracts(props.chain);
   const { address } = useAccount();
-  const [profiles, setProfiles] = useState<string[] | undefined>();
+  const [offers, setOffers] = useState<string[] | undefined>();
 
   const { data } = useInfiniteReadContracts({
-    cacheKey: `profile_list_${contracts.chain.id.toString()}`,
+    cacheKey: `offer_received_list_${contracts.chain.id.toString()}`,
     contracts(pageParam) {
       return [...new Array(LIMIT)].map(
         (_, i) =>
           ({
-            address: contracts.profileToken,
-            abi: profileTokenAbi,
-            functionName: "ownerOf",
+            address: contracts.offerToken,
+            abi: offerTokenAbi,
+            functionName: "getContent",
             args: [BigInt(pageParam + i)],
             chainId: contracts.chain.id,
           } as const)
@@ -38,30 +38,27 @@ export function ProfileList(props: { chain: number }) {
   });
 
   useEffect(() => {
-    setProfiles(undefined);
-    if (data) {
-      const profiles: string[] = [];
+    setOffers(undefined);
+    if (data && address) {
+      const offers: string[] = [];
       const dataFirstPage = (data as any).pages[0];
       for (let i = 0; i < dataFirstPage.length; i++) {
         const dataPageElement = dataFirstPage[i];
-        if (
-          dataPageElement.result &&
-          !isAddressEqual(dataPageElement.result, address || zeroAddress)
-        ) {
-          profiles.push(String(i));
+        if (isAddressEqual(dataPageElement.result.recipient, address)) {
+          offers.push(String(i));
         }
       }
-      setProfiles(profiles);
+      setOffers(offers);
     }
   }, [data, address]);
 
   return (
     <EntityList
-      entities={profiles?.toReversed()}
-      renderEntityCard={(profile, index) => (
-        <ProfileCard key={index} profile={profile} contracts={contracts} />
+      entities={offers?.toReversed()}
+      renderEntityCard={(offer, index) => (
+        <OfferCard key={index} offer={offer} contracts={contracts} />
       )}
-      noEntitiesText={`No influencers on ${contracts.chain.name} 😐`}
+      noEntitiesText={`No offers on ${contracts.chain.name} 😐`}
       className="gap-6"
     />
   );
