@@ -38,6 +38,7 @@ async function isTaskCompletedSuccessfully(
   // TODO: Load data using input URIs
   const tokenUriData: OfferTokenUriData = {
     task: "Make a post mentioning the SuperCat project",
+    created: 0,
   };
   const tokenCompleteDataUriData: OfferTokenCompleteDataUriData = {
     telegramPostLink: "https://t.me/mscculture/21840",

@@ -1,10 +1,11 @@
 import { ChainBadge } from "@/components/chain-badge";
+import { OfferCreateForm } from "@/components/offer-create-form";
 import { Separator } from "@/components/ui/separator";
 
 export default function NewOfferPage({
   params,
 }: {
-  params: { chain: number; recipient: string };
+  params: { chain: number; recipient: `0x${string}` };
 }) {
   return (
     <div className="container py-10 lg:px-80">
@@ -18,7 +19,7 @@ export default function NewOfferPage({
         </p>
       </div>
       <Separator className="my-6" />
-      {/* TODO: Implement */}
+      <OfferCreateForm recipient={params.recipient} chain={params.chain} />
     </div>
   );
 }
