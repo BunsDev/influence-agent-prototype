@@ -32,6 +32,15 @@ async function main() {
       `Contract 'USDToken' deployed to: ${await contract.getAddress()}`
     );
   }
+
+  if (!CONTRACTS[network].profileToken) {
+    const contractFactory = await ethers.getContractFactory("ProfileToken");
+    const contract = await contractFactory.deploy();
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'ProfileToken' deployed to: ${await contract.getAddress()}`
+    );
+  }
 }
 
 main().catch((error) => {
