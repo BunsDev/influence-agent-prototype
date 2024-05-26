@@ -122,32 +122,21 @@ contract OfferToken is ERC721URIStorage, Ownable, FunctionsClient {
         require(_contents[tokenId].recipient == msg.sender, "Not recipient");
         require(_contents[tokenId].completeDate != 0, "Not completed");
         require(_contents[tokenId].closeDate == 0, "Already closed");
-        // Close without functions
-        if (
-            _functionsDonId == 0x0 ||
-            _functionsRouter == address(0) ||
-            _functionsSubscriptionId == 0
-        ) {
-            _contents[tokenId].closeDate = block.timestamp;
-            _contents[tokenId].closeSuccess = true;
-            require(
-                IERC20(_contents[tokenId].paymentToken).transfer(
-                    _contents[tokenId].recipient,
-                    _contents[tokenId].paymentAmount
-                ),
-                "Failed to transfer payment to recipient"
-            );
-            _recipientSuccesses[_contents[tokenId].recipient]++;
-        }
-        // Close using functions
-        else {
-            _sendRequest(tokenId);
-        }
+        // Close
+        _close(tokenId);
     }
 
-    // TODO: Implement function for automation
-    // TODO: Send only one request for one token in one time
-    function closeBatch() public {}
+    /**
+     * Find and close only the next suitable offer
+     */
+    function closeNextOffer() public {
+        for (uint i = 0; i < _nextTokenId; i++) {
+            if (_contents[i].completeDate != 0 && _contents[i].closeDate == 0) {
+                _close(i);
+                return;
+            }
+        }
+    }
 
     function getNextTokenId() public view returns (uint nextTokenId) {
         return _nextTokenId;
@@ -175,6 +164,30 @@ contract OfferToken is ERC721URIStorage, Ownable, FunctionsClient {
         )
     {
         return (_functionsDonId, _functionsRouter, _functionsSubscriptionId);
+    }
+
+    function _close(uint tokenId) private {
+        // Close without functions
+        if (
+            _functionsDonId == 0x0 ||
+            _functionsRouter == address(0) ||
+            _functionsSubscriptionId == 0
+        ) {
+            _contents[tokenId].closeDate = block.timestamp;
+            _contents[tokenId].closeSuccess = true;
+            require(
+                IERC20(_contents[tokenId].paymentToken).transfer(
+                    _contents[tokenId].recipient,
+                    _contents[tokenId].paymentAmount
+                ),
+                "Failed to transfer payment to recipient"
+            );
+            _recipientSuccesses[_contents[tokenId].recipient]++;
+        }
+        // Close using functions
+        else {
+            _sendRequest(tokenId);
+        }
     }
 
     function _sendRequest(uint tokenId) private {
