@@ -8,6 +8,8 @@ import { OfferTokenUriData } from "@/types/offer-token-uri-data";
 import useMetadataLoader from "@/hooks/useMetadataLoader";
 import { erc20Abi, formatEther, isAddressEqual, zeroAddress } from "viem";
 import { OfferAcceptDialog } from "./offer-accept-dialog";
+import { OfferCompleteDialog } from "./offer-complete-dialog";
+import { OfferTokenCompleteDataUriData } from "@/types/offer-token-complete-data-uri-data";
 
 export function OfferCard(props: {
   offer: string;
@@ -49,6 +51,10 @@ export function OfferCard(props: {
   });
   const { data: offerUriData, isLoaded: isOfferUriDataLoaded } =
     useMetadataLoader<OfferTokenUriData>(offerUri);
+  const { data: offerCompleteDataUriData } =
+    useMetadataLoader<OfferTokenCompleteDataUriData>(
+      offerContent?.completeDataURI || ""
+    );
 
   /**
    * Define offer payment token symbol
@@ -177,6 +183,21 @@ export function OfferCard(props: {
               {offerPaymentTokenSymbol}
             </p>
           </div>
+          {/* Complete data */}
+          {offerCompleteDataUriData?.telegramPostLink && (
+            <div className="flex flex-col md:flex-row md:gap-3">
+              <p className="text-sm text-muted-foreground">Telegram Post:</p>
+              <p className="text-sm break-all">
+                <a
+                  href={offerCompleteDataUriData.telegramPostLink}
+                  target="_blank"
+                  className="underline underline-offset-4"
+                >
+                  {offerCompleteDataUriData.telegramPostLink}
+                </a>
+              </p>
+            </div>
+          )}
         </div>
         {offerStatus === "AWAITING_ACCEPTANCE" &&
           address &&
@@ -185,6 +206,15 @@ export function OfferCard(props: {
               offer={props.offer}
               contracts={props.contracts}
               onAccept={() => refetchOfferContent()}
+            />
+          )}
+        {offerStatus === "AWAITING_COMPLETION" &&
+          address &&
+          isAddressEqual(offerContent.recipient, address) && (
+            <OfferCompleteDialog
+              offer={props.offer}
+              contracts={props.contracts}
+              onComplete={() => refetchOfferContent()}
             />
           )}
       </div>
