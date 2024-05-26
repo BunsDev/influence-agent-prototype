@@ -1,17 +1,20 @@
 import { SiteConfigContracts } from "@/config/site";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { Skeleton } from "./ui/skeleton";
 import { offerTokenAbi } from "@/contracts/abi/offer-token";
 import { addressToShortAddress } from "@/lib/converters";
 import { OfferTokenUriData } from "@/types/offer-token-uri-data";
 import useMetadataLoader from "@/hooks/useMetadataLoader";
-import { erc20Abi, formatEther, zeroAddress } from "viem";
+import { erc20Abi, formatEther, isAddressEqual, zeroAddress } from "viem";
+import { OfferAcceptDialog } from "./offer-accept-dialog";
 
 export function OfferCard(props: {
   offer: string;
   contracts: SiteConfigContracts;
 }) {
+  const { address } = useAccount();
+
   /**
    * Define offer data
    */
@@ -64,22 +67,22 @@ export function OfferCard(props: {
    * Define offer status
    */
   let offerStatus:
-    | "UNKOWN"
-    | "NEW"
-    | "ACCEPTED"
+    | "UNKNOWN"
+    | "AWAITING_ACCEPTANCE"
+    | "AWAITING_COMPLETION"
     | "AWAITING_CLOSING"
     | "CLOSED_SUCCESSFULLY"
-    | "FAILED" = "UNKOWN";
+    | "CLOSED_FAILED" = "UNKNOWN";
   if (offerContent?.acceptDate?.toString() == "0") {
-    offerStatus = "NEW";
+    offerStatus = "AWAITING_ACCEPTANCE";
   } else if (offerContent?.completeDate?.toString() == "0") {
-    offerStatus = "ACCEPTED";
+    offerStatus = "AWAITING_COMPLETION";
   } else if (offerContent?.closeDate?.toString() == "0") {
     offerStatus = "AWAITING_CLOSING";
   } else if (offerContent?.closeSuccess == true) {
     offerStatus = "CLOSED_SUCCESSFULLY";
   } else if (offerContent?.closeSuccess == false) {
-    offerStatus = "FAILED";
+    offerStatus = "CLOSED_FAILED";
   }
 
   if (
@@ -103,12 +106,12 @@ export function OfferCard(props: {
         <Avatar className="size-14">
           <AvatarImage src="" alt="Icon" />
           <AvatarFallback className="text-2xl bg-secondary-foreground">
-            {offerStatus == "UNKOWN" && "❓"}
-            {offerStatus == "NEW" && "✨"}
-            {offerStatus == "ACCEPTED" && "🔥"}
+            {offerStatus == "UNKNOWN" && "❓"}
+            {offerStatus == "AWAITING_ACCEPTANCE" && "🤔"}
+            {offerStatus == "AWAITING_COMPLETION" && "🔥"}
             {offerStatus == "AWAITING_CLOSING" && "⌛"}
             {offerStatus == "CLOSED_SUCCESSFULLY" && "✅"}
-            {offerStatus == "FAILED" && "❌"}
+            {offerStatus == "CLOSED_FAILED" && "❌"}
           </AvatarFallback>
         </Avatar>
       </div>
@@ -119,12 +122,12 @@ export function OfferCard(props: {
           Offer #{props.offer}
           <span className="font-normal text-muted-foreground">
             {" — "}
-            {offerStatus == "UNKOWN" && "Unknown Status"}
-            {offerStatus == "NEW" && "New"}
-            {offerStatus == "ACCEPTED" && "Accepted"}
+            {offerStatus == "UNKNOWN" && "Unknown Status"}
+            {offerStatus == "AWAITING_ACCEPTANCE" && "Awaiting Acceptance"}
+            {offerStatus == "AWAITING_COMPLETION" && "Awaiting Completion"}
             {offerStatus == "AWAITING_CLOSING" && "Awaiting Closing"}
             {offerStatus == "CLOSED_SUCCESSFULLY" && "Closed Successfully"}
-            {offerStatus == "FAILED" && "Failed"}
+            {offerStatus == "CLOSED_FAILED" && "Closed Failed"}
           </span>
         </p>
         <div className="flex flex-col gap-3">
@@ -132,6 +135,19 @@ export function OfferCard(props: {
           <div className="flex flex-col gap-1 md:flex-row md:gap-3">
             <p className="text-sm text-muted-foreground">Task:</p>
             <p className="text-sm">{offerUriData.task}</p>
+          </div>
+          {/* Recipient */}
+          <div className="flex flex-col gap-1 md:flex-row md:gap-3">
+            <p className="text-sm text-muted-foreground">Influencer:</p>
+            <p className="text-sm break-all">
+              <a
+                href={`${props.contracts.chain.blockExplorers?.default?.url}/address/${offerContent.recipient}`}
+                target="_blank"
+                className="underline underline-offset-4"
+              >
+                {addressToShortAddress(offerContent.recipient)}
+              </a>
+            </p>
           </div>
           {/* Owner */}
           <div className="flex flex-col gap-1 md:flex-row md:gap-3">
@@ -162,6 +178,15 @@ export function OfferCard(props: {
             </p>
           </div>
         </div>
+        {offerStatus === "AWAITING_ACCEPTANCE" &&
+          address &&
+          isAddressEqual(offerContent.recipient, address) && (
+            <OfferAcceptDialog
+              offer={props.offer}
+              contracts={props.contracts}
+              onAccept={() => refetchOfferContent()}
+            />
+          )}
       </div>
     </div>
   );
