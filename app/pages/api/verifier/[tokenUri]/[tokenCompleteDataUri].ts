@@ -16,6 +16,7 @@ export default async function handler(
 ) {
   try {
     const { tokenUri, tokenCompleteDataUri } = req.query;
+    console.log({ tokenUri, tokenCompleteDataUri });
     // TODO: Uncomment
     // const isSuccess = await isTaskCompletedSuccessfully(
     //   tokenUri as string,
@@ -25,6 +26,7 @@ export default async function handler(
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.status(200).json({ result: isSuccess ? "success" : "fail" });
   } catch (error) {
+    console.error(error);
     res
       .status(500)
       .json({ result: { error: errorToPrettyError(error).message } });
