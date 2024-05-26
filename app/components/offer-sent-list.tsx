@@ -44,7 +44,6 @@ export function OfferSentList(props: { chain: number }) {
       const dataFirstPage = (data as any).pages[0];
       for (let i = 0; i < dataFirstPage.length; i++) {
         const dataPageElement = dataFirstPage[i];
-        console.log({ dataPageElement });
         if (
           dataPageElement.result &&
           isAddressEqual(dataPageElement.result, address)
