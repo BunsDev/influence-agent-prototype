@@ -10,6 +10,7 @@ import { erc20Abi, formatEther, isAddressEqual, zeroAddress } from "viem";
 import { OfferAcceptDialog } from "./offer-accept-dialog";
 import { OfferCompleteDialog } from "./offer-complete-dialog";
 import { OfferTokenCompleteDataUriData } from "@/types/offer-token-complete-data-uri-data";
+import { OfferCloseDialog } from "./offer-close-dialog";
 
 export function OfferCard(props: {
   offer: string;
@@ -215,6 +216,15 @@ export function OfferCard(props: {
               offer={props.offer}
               contracts={props.contracts}
               onComplete={() => refetchOfferContent()}
+            />
+          )}
+        {offerStatus === "AWAITING_CLOSING" &&
+          address &&
+          isAddressEqual(offerContent.recipient, address) && (
+            <OfferCloseDialog
+              offer={props.offer}
+              contracts={props.contracts}
+              onClose={() => refetchOfferContent()}
             />
           )}
       </div>
