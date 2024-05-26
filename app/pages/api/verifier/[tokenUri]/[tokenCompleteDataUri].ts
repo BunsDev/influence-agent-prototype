@@ -5,6 +5,7 @@ import { StringSession } from "telegram/sessions";
 import axios from "axios";
 import { OfferTokenUriData } from "@/types/offer-token-uri-data";
 import { OfferTokenCompleteDataUriData } from "@/types/offer-token-complete-data-uri-data";
+import { loadJsonFromIpfs } from "@/lib/ipfs";
 
 type ResponseData = {
   result: "success" | "fail" | { error: string };
@@ -17,7 +18,7 @@ export default async function handler(
   try {
     const { tokenUri, tokenCompleteDataUri } = req.query;
     console.log({ tokenUri, tokenCompleteDataUri });
-    // TODO: Uncomment
+    // TODO: Uncomment for production
     // const isSuccess = await isTaskCompletedSuccessfully(
     //   tokenUri as string,
     //   tokenCompleteDataUri as string
@@ -38,13 +39,9 @@ async function isTaskCompletedSuccessfully(
   tokenCompleteDataUri: string
 ): Promise<boolean> {
   // TODO: Load data using input URIs
-  const tokenUriData: OfferTokenUriData = {
-    task: "Make a post mentioning the SuperCat project",
-    created: 0,
-  };
-  const tokenCompleteDataUriData: OfferTokenCompleteDataUriData = {
-    telegramPostLink: "https://t.me/mscculture/21840",
-  };
+  const tokenUriData: OfferTokenUriData = await loadJsonFromIpfs(tokenUri);
+  const tokenCompleteDataUriData: OfferTokenCompleteDataUriData =
+    await loadJsonFromIpfs(tokenCompleteDataUri);
   if (tokenUriData.task && tokenCompleteDataUriData.telegramPostLink) {
     const { message: telegramPostMessage, date: telegramPostDate } =
       await getTelegramPostMessage(tokenCompleteDataUriData.telegramPostLink);
