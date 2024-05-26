@@ -1,4 +1,5 @@
 import { ChainBadge } from "@/components/chain-badge";
+import { OfferSentList } from "@/components/offer-sent-list";
 import { Separator } from "@/components/ui/separator";
 
 export default function SentOffersPage({
@@ -18,7 +19,7 @@ export default function SentOffersPage({
         </p>
       </div>
       <Separator className="my-6" />
-      {/* TODO: Implement */}
+      <OfferSentList chain={params.chain} />
     </div>
   );
 }
