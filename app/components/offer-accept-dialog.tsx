@@ -31,8 +31,6 @@ export function OfferAcceptDialog(props: {
   const [isOpen, setIsOpen] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
 
-  // TODO: Implement
-  // Example - https://github.dev/web3goals/farm-token-prototype/blob/b756a19ab5a9f9de69fd02fce48caaa6929daa22/app/components/token-invest-dialog.tsx
   async function onSubmit() {
     try {
       setIsFormSubmitting(true);
@@ -87,7 +85,7 @@ export function OfferAcceptDialog(props: {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to accept this offer?
+            Are you sure you want to accept the offer #{props.offer}?
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
