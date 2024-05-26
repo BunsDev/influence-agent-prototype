@@ -382,7 +382,7 @@ export const offerTokenAbi = [
   },
   {
     inputs: [],
-    name: "closeBatch",
+    name: "closeNextOffer",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
