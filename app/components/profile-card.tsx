@@ -1,4 +1,5 @@
 import { SiteConfigContracts } from "@/config/site";
+import { offerTokenAbi } from "@/contracts/abi/offer-token";
 import { profileTokenAbi } from "@/contracts/abi/profile-token";
 import useMetadataLoader from "@/hooks/useMetadataLoader";
 import { addressToShortAddress } from "@/lib/converters";
@@ -17,6 +18,9 @@ export function ProfileCard(props: {
 }) {
   const { address } = useAccount();
 
+  /**
+   * Define profile data
+   */
   const { data: profileOwner, isFetched: isProfleOwnerFetched } =
     useReadContract({
       address: props.contracts.profileToken,
@@ -34,6 +38,17 @@ export function ProfileCard(props: {
   });
   const { data: profileUriData, isLoaded: isProfileUriDataLoaded } =
     useMetadataLoader<ProfileTokenUriData>(profileUri);
+
+  /**
+   * Define profile stats
+   */
+  const { data: stats } = useReadContract({
+    address: props.contracts.offerToken,
+    abi: offerTokenAbi,
+    functionName: "getStats",
+    args: [profileOwner || zeroAddress],
+    chainId: props.contracts.chain.id,
+  });
 
   if (
     !profileOwner ||
@@ -68,11 +83,20 @@ export function ProfileCard(props: {
           </Badge>
         )}
         {profileUriData.bio && (
-          <p className="text-sm text-muted-foreground mt-1">
-            {profileUriData.bio}
-          </p>
+          <p className="text-sm mt-1">{profileUriData.bio}</p>
         )}
-        {/* TODO: Display stats */}
+        {stats && (
+          <>
+            <p className="text-sm">
+              <span className="font-bold">{stats[0].toString()}</span>
+              <span className="text-muted-foreground"> Completed Offers</span>
+            </p>
+            <p className="text-sm">
+              <span className="font-bold">{stats[1].toString()}</span>
+              <span className="text-muted-foreground"> Failed Offers</span>
+            </p>
+          </>
+        )}
         <div className="flex flex-row gap-4">
           <p className="text-sm">
             <a
