@@ -6,17 +6,12 @@ async function main() {
 
   const network = hre.network.name;
 
-  if (
-    !CONTRACTS[network].offerToken &&
-    CONTRACTS[network].functionsDonId &&
-    CONTRACTS[network].functionsRouter &&
-    CONTRACTS[network].functionsSubscriptionId
-  ) {
+  if (!CONTRACTS[network].offerToken) {
     const contractFactory = await ethers.getContractFactory("OfferToken");
     const contract = await contractFactory.deploy(
-      CONTRACTS[network].functionsDonId as `0x${string}`,
-      CONTRACTS[network].functionsRouter as `0x${string}`,
-      CONTRACTS[network].functionsSubscriptionId as number
+      CONTRACTS[network].functionsDonId || ethers.ZeroHash,
+      CONTRACTS[network].functionsRouter || ethers.ZeroAddress,
+      CONTRACTS[network].functionsSubscriptionId || 0
     );
     await contract.waitForDeployment();
     console.log(

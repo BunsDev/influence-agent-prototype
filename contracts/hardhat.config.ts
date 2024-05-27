@@ -19,6 +19,10 @@ const config: HardhatUserConfig = {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
       accounts: [process.env.PRIVATE_KEY as string],
     },
+    polygonCardona: {
+      url: "https://rpc.cardona.zkevm-rpc.com",
+      accounts: [process.env.PRIVATE_KEY as string],
+    },
   },
 };
 
