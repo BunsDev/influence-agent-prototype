@@ -25,4 +25,12 @@ export const CONTRACTS: {
     functionsRouter: undefined,
     functionsSubscriptionId: undefined,
   },
+  scrollSepolia: {
+    offerToken: "0xC3d9DcfD747795c7F6590B51b44478a0EE7d02F1",
+    usdToken: "0x9b18515b74eF6115A673c6D01C454D8F72f84177",
+    profileToken: "0x4F316c6536Ce3ee94De802a9EfDb20484Ec4BDF9",
+    functionsDonId: undefined,
+    functionsRouter: undefined,
+    functionsSubscriptionId: undefined,
+  },
 };

@@ -23,6 +23,25 @@ const config: HardhatUserConfig = {
       url: "https://rpc.cardona.zkevm-rpc.com",
       accounts: [process.env.PRIVATE_KEY as string],
     },
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io",
+      accounts: [process.env.PRIVATE_KEY as string],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollSepolia: process.env.SCROLL_SCAN_API_KEY as string,
+    },
+    customChains: [
+      {
+        network: "scrollSepolia",
+        chainId: 534351,
+        urls: {
+          apiURL: "https://api-sepolia.scrollscan.com/api",
+          browserURL: "https://sepolia.scrollscan.com/",
+        },
+      },
+    ],
   },
 };
 
