@@ -114,7 +114,7 @@ export function OfferCard(props: {
           <AvatarImage src="" alt="Icon" />
           <AvatarFallback className="text-2xl bg-secondary-foreground">
             {offerStatus == "UNKNOWN" && "❓"}
-            {offerStatus == "AWAITING_ACCEPTANCE" && "🤔"}
+            {offerStatus == "AWAITING_ACCEPTANCE" && "🆕"}
             {offerStatus == "AWAITING_COMPLETION" && "🔥"}
             {offerStatus == "AWAITING_CLOSING" && "⌛"}
             {offerStatus == "CLOSED_SUCCESSFULLY" && "✅"}
