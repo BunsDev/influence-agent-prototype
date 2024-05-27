@@ -38,7 +38,6 @@ async function isTaskCompletedSuccessfully(
   tokenUri: string,
   tokenCompleteDataUri: string
 ): Promise<boolean> {
-  // TODO: Load data using input URIs
   const tokenUriData: OfferTokenUriData = await loadJsonFromIpfs(tokenUri);
   const tokenCompleteDataUriData: OfferTokenCompleteDataUriData =
     await loadJsonFromIpfs(tokenCompleteDataUri);

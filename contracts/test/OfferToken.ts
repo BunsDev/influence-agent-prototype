@@ -34,8 +34,7 @@ describe("OfferToken", function () {
     };
   }
 
-  // TODO: Delete only attribute
-  it.only("Should support the main flow", async function () {
+  it("Should support the main flow", async function () {
     const { userOne, userTwo, usdTokenContract, offerTokenContract } =
       await loadFixture(initFixture);
     // Create offer
